@@ -85,20 +85,34 @@ os.makedirs(path_audio_files, exist_ok=True)
 
 def main():
     with st.container():
-        st.title("Audio Transcriber")
-        st.write("This app transcribes audio files to text.")
-        
+        st.title("Webstep")
+        st.header("Whisper audio transcriber demo")
+        st.subheader("This app transcribes audio files to text. The app is intended for demo purposes only.")
+
+        st.write("The natural language AI model can be further trained in any language to improve accuracy. The model can run in the cloud or on-premise.")
+
+
             
-        model_name = st.selectbox("Whisper model:", ("tiny", "base", "small", "medium", "large", "large-v2"))
+        model_name = st.selectbox("Select Whisper model:", ("tiny", "base", "small", "medium", "large", "large-v2"))
+        st.write("Tiny is fast and not accurate. Large is slow and accurate. The other models are in between.")
         
+        st.write("")
         language = st.selectbox("Spoken Language:", ("automatic", "English", "Norwegian",))
         if language == "automatic": language = None
 
-        audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3"])
+        st.write("")
+        st.subheader("Please do not upload sensitive data.")
+
+        audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3", "mp4"])
+
+
+
 
         if audio_file is None:
             st.warning("Please upload an audio file.")
             return
+
+
 
         if audio_file is not None:
 
@@ -115,7 +129,7 @@ def main():
 
                 model = get_whisper_model(name=model_name, modify=True)
 
-                st.write(f"Writing transcription with whisper model {model_name}. This takes some time...")
+                st.write(f"Writing transcription with whisper model {model_name}. This may take a while, but much faster than doing it yourself. Go grab some coffee meanwhile!")
                 result, dt = transcripe_audio(audio_file_name, model, language)
                 srt = convert_to_srt(result)
                 #save_srt(srt, audio_file_name)
@@ -125,6 +139,18 @@ def main():
                 #download_button(srt, f"{audio_file.name}.srt")
                 os.remove(audio_file_name)
                 st.code(srt)
+
+                st.write("You can copy the text above and save it as a .srt file. You can then use the .srt file to add subtitles to your video using for example VLC video player.")
+
+                st.header("What's next?")
+                st.write("This demo is intented for demo purposes only and we can help you customize the model to your needs.")
+                st.markdown("- Train on new languages or dialects to improve accuracy")
+                st.markdown("- The model can run in the cloud or on-premise for privacy")
+                st.markdown("- The text output of the model can be used to create subtitles for videos or just regular text files in any format you want")
+                st.markdown("- We can also give timestamps for each word in the transcription and provide a confidence score for each word.")
+                
+                         
+                st.markdown("Please contact [joar.krohn@webstep.no](mailto:joar.krohn@webstep.no) or [knut.andersen@webstep.no](mailto:knut.andersen@webstep.no) for more information.")
 
 main()
 
