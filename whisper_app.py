@@ -4,6 +4,7 @@ import datetime
 import time
 from pathlib import Path
 import whisper
+import torch
 
 from stable_whisper import modify_model
 import streamlit as st
@@ -18,10 +19,10 @@ def get_whisper_model(name="medium", modify=True):
     return model
 
 #@st.cache_resource
-def transcripe_audio(audio_file_name, model, language=None):
+def transcripe_audio(audio_file_name, model, language=None, use_cuda=False):
     '''Transcribe an audio file with whisper.'''
     t1 = datetime.datetime.now()
-    result = model.transcribe(audio_file_name, verbose=True, fp16=False, language=language)
+    result = model.transcribe(audio_file_name, verbose=True, fp16=use_cuda, language=language)
     dt = (datetime.datetime.now() - t1)
     dt = str(dt)
     return result, dt
@@ -90,8 +91,9 @@ def main():
         st.subheader("This app transcribes audio files to text. The app is intended for demo purposes only.")
 
         st.write("The natural language AI model can be further trained in any language to improve accuracy. The model can run in the cloud or on-premise.")
-
-
+        
+        use_cuda = torch.cuda.is_available()
+        st.write(f"GPU available: {use_cuda}")
             
         model_name = st.selectbox("Select Whisper model:", ("tiny", "base", "small", "medium", "large", "large-v2"))
         st.write("Tiny is fast and not accurate. Large is slow and accurate. The other models are in between.")
@@ -130,7 +132,7 @@ def main():
                 st.write("Downloading the model...")
                 model = get_whisper_model(name=model_name, modify=True)
                 st.write("Transcribe audio file...")
-                result, dt = transcripe_audio(audio_file_name, model, language)
+                result, dt = transcripe_audio(audio_file_name, model, language, use_cuda)
                 srt = convert_to_srt(result)
                 #save_srt(srt, audio_file_name)
                 st.write(f"Transcription took {dt}")
