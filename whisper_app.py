@@ -131,7 +131,7 @@ def main():
                 st.write(f"Writing transcription with whisper model {model_name}. This may take a while, but much faster than doing it yourself. Go grab some coffee meanwhile!")
                 st.write("Downloading the model...")
                 model = get_whisper_model(name=model_name, modify=True)
-                st.write("Transcribe audio file...")
+                st.write("Transcribing audio file...")
                 result, dt = transcripe_audio(audio_file_name, model, language, use_cuda)
                 srt = convert_to_srt(result)
                 #save_srt(srt, audio_file_name)
