@@ -129,7 +129,7 @@ def main():
             audio_file_name = path_audio_files + audio_file_name
 
             if len(audio_file_name) > 0:
-                st.write(f"Writing transcription with whisper}. This may take a while, but much faster than doing it yourself. Go grab some coffee meanwhile!")
+                st.write(f"Writing transcription with whisper. This may take a while, but much faster than doing it yourself. Go grab some coffee meanwhile!")
                 st.write("Downloading the model...")
                 model = get_whisper_model(name=model_name, modify=True)
                 st.write("Transcribing audio file...")
