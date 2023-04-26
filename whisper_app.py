@@ -93,10 +93,11 @@ def main():
         st.write("The natural language AI model can be further trained in any language to improve accuracy. The model can run in the cloud or on-premise.")
         
         use_cuda = torch.cuda.is_available()
-        st.write(f"GPU available: {use_cuda}")
+        #st.write(f"GPU available: {use_cuda}")
             
-        model_name = st.selectbox("Select Whisper model:", ("tiny", "base", "small", "medium", "large", "large-v2"))
-        st.write("Tiny is fast and not accurate. Large is slow and accurate. The other models are in between.")
+        #model_name = st.selectbox("Select Whisper model:", ("tiny", "base", "small", "medium", "large", "large-v2"))
+        model_name = "large-v2"
+        #st.write("Tiny is fast and not accurate. Large is slow and accurate. The other models are in between.")
         
         st.write("")
         language = st.selectbox("Spoken Language:", ("automatic", "English", "Norwegian",))
@@ -128,7 +129,7 @@ def main():
             audio_file_name = path_audio_files + audio_file_name
 
             if len(audio_file_name) > 0:
-                st.write(f"Writing transcription with whisper model {model_name}. This may take a while, but much faster than doing it yourself. Go grab some coffee meanwhile!")
+                st.write(f"Writing transcription with whisper}. This may take a while, but much faster than doing it yourself. Go grab some coffee meanwhile!")
                 st.write("Downloading the model...")
                 model = get_whisper_model(name=model_name, modify=True)
                 st.write("Transcribing audio file...")
