@@ -38,7 +38,7 @@ jobs:
             gpu-count: 1
             gpu-sku: K80
             ip-adress: Public
-            protocol: tcp
+            protocol: TCP
             ports: 80
             name: gpuwhisper
             location: 'northeurope'
