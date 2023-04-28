@@ -27,12 +27,18 @@ COPY whisper_app.py .
 
 # Install dependencies.
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-RUN apt-get update && apt-get install -y ffmpeg
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get clean && apt-get autoclean && apt-get autoremove
+
 
 RUN python -m venv .venv
 RUN source .venv/bin/activate
-RUN pip install -r requirements.txt
+RUN pip --no-cache-dir install -r requirements.txt
 
 
 # Run the web service on container startup.
-CMD streamlit run whisper_app.py
+CMD streamlit run whisper_app.py --server.port 80
