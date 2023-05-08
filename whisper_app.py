@@ -5,9 +5,13 @@ import time
 from pathlib import Path
 import whisper
 import torch
+import yaml
+from yaml.loader import SafeLoader
 
 from stable_whisper import modify_model
+import streamlit_authenticator as stauth
 import streamlit as st
+
 st.set_page_config(page_title="Whisper transcriper", page_icon=":computer:")
 
 
@@ -84,7 +88,7 @@ language = None
 ##################
 os.makedirs(path_audio_files, exist_ok=True)
 
-def main():
+def run_app():
     with st.container():
         st.title("Webstep")
         st.header("Whisper audio transcriber demo")
@@ -155,6 +159,33 @@ def main():
                          
                 st.markdown("Please contact [joar.krohn@webstep.no](mailto:joar.krohn@webstep.no) or [knut.andersen@webstep.no](mailto:knut.andersen@webstep.no) for more information.")
 
+
+def main():
+
+    with open('config.yaml') as file:
+        config = yaml.load(file, Loader=SafeLoader)
+
+    authenticator = stauth.Authenticate(
+        config['credentials'],
+        config['cookie']['name'],
+        config['cookie']['key'],
+        config['cookie']['expiry_days'],
+        config['preauthorized']
+        )
+    
+    name, authentication_status, username = authenticator.login('Login', 'main')
+    print(authentication_status, username  )
+    if authentication_status:
+        authenticator.logout('Logout', 'main', key='unique_key')
+        run_app()
+
+    elif authentication_status is False:
+        st.error('Username/password is incorrect')
+    elif authentication_status is None:
+        st.warning('Please enter your username and password')
+
 main()
 
 
+#hashed_passwords = stauth.Hasher(['abc']).generate()
+#print(hashed_passwords)
