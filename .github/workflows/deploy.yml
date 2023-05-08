@@ -37,7 +37,7 @@ jobs:
             memory: 16
             gpu-count: 1
             gpu-sku: K80
-            ip-adress: Public
+            ip-address: Public
             protocol: TCP
             ports: 80
             name: gpuwhisper
