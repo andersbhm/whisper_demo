@@ -4,8 +4,13 @@ credentials:
       email: 
       name: 
       password: $2b$12$ULUA/w25mhHZotuS3KKxU.bNxqfQOm8v3cEKERcUmgCXMJlc2D2Ii # To be replaced with hashed password
+
+    demouser:
+      email: 
+      name: 
+      password: $2b$12$eXZsE8az5TkaAXqHUz/hlu16CsSiJYEzt8JNzPp8UDzAmOxq8jGY. # To be replaced with hashed password
 cookie:
-  expiry_days: 0
+  expiry_days: 1
   key: random_signature_key # Must be string
   name: random_cookie_name
 preauthorized:

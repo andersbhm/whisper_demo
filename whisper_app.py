@@ -101,6 +101,7 @@ def run_app():
             
         #model_name = st.selectbox("Select Whisper model:", ("tiny", "base", "small", "medium", "large", "large-v2"))
         model_name = "large-v2"
+        #model_name = "tiny"
         #st.write("Tiny is fast and not accurate. Large is slow and accurate. The other models are in between.")
         
         st.write("")
@@ -111,8 +112,6 @@ def run_app():
         st.subheader("Please do not upload sensitive data.")
 
         audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3", "mp4"])
-
-
 
 
         if audio_file is None:
@@ -174,7 +173,6 @@ def main():
         )
     
     name, authentication_status, username = authenticator.login('Login', 'main')
-    print(authentication_status, username  )
     if authentication_status:
         authenticator.logout('Logout', 'main', key='unique_key')
         run_app()
