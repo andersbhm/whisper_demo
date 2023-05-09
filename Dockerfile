@@ -23,6 +23,7 @@ WORKDIR /usr/src/app
 # Copying this separately prevents re-running pip install on every code change.
 COPY requirements.txt ./
 COPY config.yaml ./
+COPY .streamlit/. ./.streamlit/
 
 COPY whisper_app.py .
 
