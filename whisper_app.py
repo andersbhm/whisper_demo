@@ -18,7 +18,7 @@ st.set_page_config(page_title="Whisper transcriper", page_icon=":computer:")
 
 
 
-@st.cache
+@st.cache_resource
 def get_whisper_model(name="medium", modify=True):
     '''Get a model from the whisper package. If modify is True, the model will be modified to work with the stable_whisper package.'''
     model = whisper.load_model(name)
@@ -138,7 +138,7 @@ def run_app():
             
         #model_name = st.selectbox("Select Whisper model:", ("tiny", "base", "small", "medium", "large", "large-v2"))
         model_name = "large-v2"
-        #model_name = "medium"
+        #model_name = "tiny"
         #st.write("Tiny is fast and not accurate. Large is slow and accurate. The other models are in between.")
         
         st.write("")
