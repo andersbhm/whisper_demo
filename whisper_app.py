@@ -1,21 +1,24 @@
 import datetime
 import os
-import datetime
 import time
 from pathlib import Path
 import whisper
 import torch
 import yaml
 from yaml.loader import SafeLoader
+import csv
 
 from stable_whisper import modify_model
 import streamlit_authenticator as stauth
 import streamlit as st
 
+
+
 st.set_page_config(page_title="Whisper transcriper", page_icon=":computer:")
 
 
-#@st.cache_resource
+
+@st.cache
 def get_whisper_model(name="medium", modify=True):
     '''Get a model from the whisper package. If modify is True, the model will be modified to work with the stable_whisper package.'''
     model = whisper.load_model(name)
@@ -79,7 +82,35 @@ def download_button(text, filename):
     st.download_button(label="Download srt file", data=text,
         file_name=filename, mime="text/plain")
 
+def add_timestamp_and_counter():
+    counter = 0
+    last_run_time = None
 
+    try:
+        with open('data.csv', 'r') as file:
+            reader = csv.reader(file)
+            rows = list(reader)
+
+            if rows:
+                counter = int(rows[-1][1]) + 1
+                last_run_time = datetime.datetime.strptime(rows[-1][0], "%Y-%m-%d %H:%M:%S")
+
+                time_difference = datetime.datetime.now() - last_run_time
+                if time_difference.total_seconds() > 60:  # Check if time difference > 10 minutes (600 seconds)
+                    counter = 1  # Reset the counter if the time difference is larger than 10 minutes
+            else:
+                counter = 1
+
+    except FileNotFoundError:
+        counter = 1
+
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Get current timestamp
+    print(f"Timestamp: {timestamp}, Counter: {counter}")
+
+    with open('data.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([timestamp, counter])
+    return counter
 
 ##################
 path_audio_files = "audiofiles/"
@@ -91,9 +122,15 @@ os.makedirs(path_audio_files, exist_ok=True)
 def run_app():
     with st.container():
         st.title("Webstep")
+        
+        if False:
+            counter = add_timestamp_and_counter()       
+            st.write("Number of active users: %d" % counter)
+            if counter > 2:
+                st.write("If the number of active users is larger than 2, the demo might crash. Note that this will not be a problem for a full-scale solution.")
+
         st.header("Whisper audio transcriber demo")
         st.subheader("This app transcribes audio files to text. The app is intended for demo purposes only.")
-
         st.write("The natural language AI model can be further trained in any language to improve accuracy. The model can run in the cloud or on-premise.")
         
         use_cuda = torch.cuda.is_available()
@@ -101,12 +138,13 @@ def run_app():
             
         #model_name = st.selectbox("Select Whisper model:", ("tiny", "base", "small", "medium", "large", "large-v2"))
         model_name = "large-v2"
-        #model_name = "tiny"
+        #model_name = "medium"
         #st.write("Tiny is fast and not accurate. Large is slow and accurate. The other models are in between.")
         
         st.write("")
         language = st.selectbox("Spoken Language:", ("automatic", "English", "Norwegian",))
         if language == "automatic": language = None
+        st.write("")
 
         st.write("")
         st.subheader("Please do not upload sensitive data.")
@@ -157,6 +195,7 @@ def run_app():
                 
                          
                 st.markdown("Please contact [joar.krohn@webstep.no](mailto:joar.krohn@webstep.no) or [knut.andersen@webstep.no](mailto:knut.andersen@webstep.no) for more information.")
+
 
 
 def main():
