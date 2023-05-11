@@ -1,5 +1,5 @@
 stable_ts==1.0.3
-streamlit==1.18.0
+streamlit==1.20.0
 streamlit-authenticator==0.2.2
 whisper==1.1.10
 whisper_openai==1.0.0
