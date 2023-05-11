@@ -18,7 +18,7 @@ st.set_page_config(page_title="Whisper transcriper", page_icon=":computer:")
 
 
 
-#@st.cache
+@st.cache
 def get_whisper_model(name="medium", modify=True):
     '''Get a model from the whisper package. If modify is True, the model will be modified to work with the stable_whisper package.'''
     model = whisper.load_model(name)
